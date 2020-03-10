@@ -1,5 +1,5 @@
 module.exports = {
-  entry: './client/index.js',
+  entry: ['./inc/polyfills.js', './client/index.js'],
   output: {
     path: __dirname,
     filename: './build/bundle.js',
