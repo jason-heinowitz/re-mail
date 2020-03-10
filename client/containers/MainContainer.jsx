@@ -12,10 +12,12 @@ import Login from '../components/Login';
 import Page404 from '../components/Page404';
 import Emails from '../components/Emails';
 import Register from '../components/Register';
+import CreateEmail from '../components/CreateEmail';
 import * as actions from '../actions/sagaActions';
 
 const mapStateToProps = (state) => ({
   authed: state.login.authed,
+  emails: state.email.emails,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -26,6 +28,7 @@ const mapDispatchToProps = (dispatch) => ({
 
   // email actions
   getEmails: () => dispatch(actions.getEmails()),
+  sendEmail: (obj) => dispatch(actions.sendEmail(obj)),
 });
 
 const MainContainer = (props) => {
@@ -44,7 +47,10 @@ const MainContainer = (props) => {
             <Link to="/register">Register</Link>
           </>
         ) : (
-          <Link to="/emails">Emails</Link>
+          <>
+            <Link to="/emails">Emails</Link>
+            <Link to="/create">Create Email</Link>
+          </>
         )}
 
         <Switch>
@@ -64,6 +70,9 @@ const MainContainer = (props) => {
               <Route path="/emails">
                 <Redirect to="/" />
               </Route>
+              <Route path="/create">
+                <Redirect to="/" />
+              </Route>
             </>
           ) : (
             <>
@@ -75,7 +84,10 @@ const MainContainer = (props) => {
               </Route>
 
               <Route path="/emails">
-                <Emails getEmails={props.getEmails} />
+                <Emails getEmails={props.getEmails} emails={props.emails} />
+              </Route>
+              <Route path="/create">
+                <CreateEmail sendEmail={props.sendEmail} />
               </Route>
             </>
           )}

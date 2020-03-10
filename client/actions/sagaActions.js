@@ -18,6 +18,8 @@ export const getEmails = () => ({
   type: types.GET_EMAILS,
 });
 
-export const sendEmail = () => ({
+export const sendEmail = ({ to, body }) => ({
   type: types.SEND_EMAIL,
+  to,
+  body,
 });
