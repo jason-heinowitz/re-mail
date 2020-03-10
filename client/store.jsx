@@ -3,6 +3,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 import createSagaMiddleware from 'redux-saga';
 import { watchAuth } from './sagas/loginSaga';
+import { watchEmails } from './sagas/emailSaga';
 
 import reducers from './reducers/index';
 
@@ -13,5 +14,6 @@ const store = createStore(
 );
 
 sagaMiddleware.run(watchAuth);
+sagaMiddleware.run(watchEmails);
 
 export default store;

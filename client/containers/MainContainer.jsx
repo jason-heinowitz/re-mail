@@ -1,10 +1,5 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import Home from '../components/Home';
-import Login from '../components/Login';
-import Page404 from '../components/Page404';
-import Emails from '../components/Emails';
-import Register from '../components/Register';
 import {
   BrowserRouter as Router,
   Link,
@@ -12,6 +7,11 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom';
+import Home from '../components/Home';
+import Login from '../components/Login';
+import Page404 from '../components/Page404';
+import Emails from '../components/Emails';
+import Register from '../components/Register';
 import * as actions from '../actions/sagaActions';
 
 const mapStateToProps = (state) => ({
@@ -19,9 +19,13 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  // auth actions
   login: (username, password) => dispatch(actions.login(username, password)),
   logout: () => dispatch(actions.logout()),
   checkCookies: () => dispatch(actions.check()),
+
+  // email actions
+  getEmails: () => dispatch(actions.getEmails()),
 });
 
 const MainContainer = (props) => {
@@ -71,7 +75,7 @@ const MainContainer = (props) => {
               </Route>
 
               <Route path="/emails">
-                <Emails />
+                <Emails getEmails={props.getEmails} />
               </Route>
             </>
           )}

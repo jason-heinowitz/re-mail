@@ -92,4 +92,4 @@ export function* watchAuth() {
   }
 }
 
-export function* f() {}
+export function* x() {}
