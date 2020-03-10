@@ -41,6 +41,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log(process.env.NODE_ENV);
   console.log(`Listening on http://localhost:${PORT}`);
 });

@@ -4,7 +4,7 @@ import * as types from '../constants/sagaTypes';
 
 function* authLogin(username, password) {
   try {
-    const response = yield call(fetch, '/authorize/login', {
+    const response = yield call(fetch, '/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -33,16 +33,22 @@ function* authLogin(username, password) {
 
 function* checkCookies() {
   try {
+    const response = yield call(fetch, '/auth/check');
+    if (response.status === 200) {
+      yield put(actions.loginSuccess());
+    } else yield put({ type: types.STOP_LOGIN });
   } catch (e) {
+    console.log(e);
   } finally {
     if (yield cancelled()) {
+      console.log('Cookie check cancelled by user.');
     }
   }
 }
 
 function* clearAuth() {
   try {
-    yield call(fetch, '/authorize/logout', {
+    yield call(fetch, '/auth/logout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -50,8 +56,10 @@ function* clearAuth() {
     });
     yield put(actions.logoutSuccess());
   } catch (e) {
+    console.log(e);
   } finally {
     if (yield cancelled()) {
+      console.log('Clear auth cancelled by user.');
     }
   }
 }
@@ -69,7 +77,7 @@ export function* watchAuth() {
       action = yield fork(authLogin, username, password);
     } else if (initRes.type === types.CHECK) {
       // run instead if user already has cookies
-      yield fork(checkCookies);
+      action = yield fork(checkCookies);
     }
 
     // WAIT FOR LOGOUT OR LOGIN ERROR

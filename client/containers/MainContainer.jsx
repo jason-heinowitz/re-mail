@@ -1,8 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import Home from '../components/Home';
 import Login from '../components/Login';
-import { BrowserRouter as Router, Link, Switch, Route } from 'react-router-dom';
+import Page404 from '../components/Page404';
+import Emails from '../components/Emails';
+import Register from '../components/Register';
+import {
+  BrowserRouter as Router,
+  Link,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom';
 import * as actions from '../actions/sagaActions';
 
 const mapStateToProps = (state) => ({
@@ -12,23 +21,63 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   login: (username, password) => dispatch(actions.login(username, password)),
   logout: () => dispatch(actions.logout()),
+  checkCookies: () => dispatch(actions.check()),
 });
 
 const MainContainer = (props) => {
+  useEffect(props.checkCookies, []);
+
   return (
     <div>
       <h1>Main Container</h1>
+      <button onClick={props.logout}>Logout</button>
 
       <Router>
         <Link to="/">Home</Link>
-        <Link to="/login">Login</Link>
+        {props.authed === false ? (
+          <>
+            <Link to="/login">Login</Link>
+            <Link to="/register">Register</Link>
+          </>
+        ) : (
+          <Link to="/emails">Emails</Link>
+        )}
 
         <Switch>
           <Route path="/" exact>
             <Home />
           </Route>
-          <Route path="/login">
-            <Login />
+
+          {props.authed === false ? (
+            <>
+              <Route path="/login">
+                <Login login={props.login} />
+              </Route>
+              <Route path="/register">
+                <Register />
+              </Route>
+
+              <Route path="/emails">
+                <Redirect to="/" />
+              </Route>
+            </>
+          ) : (
+            <>
+              <Route path="/login">
+                <Redirect to="/emails" />
+              </Route>
+              <Route path="/register">
+                <Redirect to="/emails" />
+              </Route>
+
+              <Route path="/emails">
+                <Emails />
+              </Route>
+            </>
+          )}
+
+          <Route>
+            <Page404 />
           </Route>
         </Switch>
       </Router>
