@@ -25,6 +25,9 @@ const mapDispatchToProps = (dispatch) => ({
   login: (username, password) => dispatch(actions.login(username, password)),
   logout: () => dispatch(actions.logout()),
   checkCookies: () => dispatch(actions.check()),
+  register: (user) => {
+    dispatch(actions.register(user));
+  },
 
   // email actions
   getEmails: () => dispatch(actions.getEmails()),
@@ -64,7 +67,7 @@ const MainContainer = (props) => {
                 <Login login={props.login} />
               </Route>
               <Route path="/register">
-                <Register />
+                <Register register={props.register} />
               </Route>
 
               <Route path="/emails">

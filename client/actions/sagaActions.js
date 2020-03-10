@@ -14,6 +14,11 @@ export const check = () => ({
   type: types.CHECK,
 });
 
+export const register = (user) => ({
+  type: types.REGISTER,
+  user,
+});
+
 export const getEmails = () => ({
   type: types.GET_EMAILS,
 });

@@ -11,3 +11,11 @@ export const loginFail = () => ({
 export const logoutSuccess = () => ({
   type: types.LOGOUT_SUCESS,
 });
+
+export const regSuccess = () => ({
+  type: types.REGISTER_SUCCESS,
+});
+
+export const regFail = () => ({
+  type: types.REGISTER_FAIL,
+});

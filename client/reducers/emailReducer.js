@@ -11,6 +11,10 @@ const emailReducer = (state = initialState, action) => {
         ...state,
         emails: action.emails.reverse(),
       };
+    case types.SEND_EMAIL_SUCCESS:
+      return state;
+    case types.SEND_EMAIL_FAIL:
+      return state;
     default:
       return state;
   }

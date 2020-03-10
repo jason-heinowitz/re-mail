@@ -6,7 +6,6 @@ function* getEmails() {
   const response = yield call(fetch, '/api/emails');
   const emails = yield call([response, 'json']);
   if (response.status === 200) {
-    console.log(emails);
     yield put(actions.ges(emails));
   } else yield put(actions.gef());
 }

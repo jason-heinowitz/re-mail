@@ -1,7 +1,9 @@
 import * as types from '../constants/loginTypes';
+import React from 'react';
+import { Redirect } from 'react-router-dom';
 
 const initialState = {
-  authed: false,
+  authed: null,
 };
 
 /*
@@ -28,6 +30,10 @@ const loginReducer = (state = initialState, action) => {
         ...state,
         authed: false,
       };
+    case types.REGISTER_SUCCESS:
+      return state;
+    case types.REGISTER_FAIL:
+      return state;
     default:
       return state;
   }

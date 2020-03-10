@@ -92,4 +92,28 @@ export function* watchAuth() {
   }
 }
 
-export function* x() {}
+function* register({ firstname, lastname, username, password }) {
+  const response = yield call(fetch, '/auth/register', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      firstname,
+      lastname,
+      username,
+      password,
+    }),
+  });
+
+  if (response.status === 200) {
+    yield put(actions.regSuccess());
+  } else yield put(actions.regFail());
+}
+
+export function* watchRegister() {
+  while (true) {
+    const user = yield take(types.REGISTER);
+    yield call(register, user.user);
+  }
+}
