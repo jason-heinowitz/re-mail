@@ -5,7 +5,8 @@
   "author": "Jason Heinowitz <jasonheinowitz@yahoo.com>",
   "license": "MIT",
   "scripts": {
-    "start": "NODE_ENV=production concurrently \"nodemon server/server.js\"",
+    "start": "cross-env NODE_ENV=production concurrently \"nodemon server/server.js\"",
+    "dev": "cross-env NODE_ENV=development concurrently \"nodemon server/server.js\" \"webpack-dev-server --open\"",
     "build": "webpack"
   },
   "dependencies": {
@@ -27,10 +28,13 @@
     "@babel/preset-env": "^7.8.7",
     "@babel/preset-react": "^7.8.3",
     "babel-loader": "^8.0.6",
+    "cross-env": "^7.0.2",
     "css-loader": "^3.4.2",
     "nodemon": "^2.0.2",
     "sass-loader": "^8.0.2",
     "style-loader": "^1.1.3",
-    "webpack-cli": "^3.3.11"
-  }
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
+  },
+  "proxy": "http://locahost:8080/"
 }

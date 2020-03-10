@@ -4,7 +4,7 @@ module.exports = {
     path: __dirname,
     filename: './build/bundle.js',
   },
-  mode: 'production',
+  mode: process.env.NODE_ENV,
   resolve: {
     extensions: ['.js', '.jsx'],
   },
