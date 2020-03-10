@@ -3,10 +3,14 @@ module.exports = {
   output: {
     path: __dirname,
     filename: './build/bundle.js',
+    publicPath: '/',
   },
   mode: process.env.NODE_ENV,
   resolve: {
     extensions: ['.js', '.jsx'],
+  },
+  devServer: {
+    historyApiFallback: true,
   },
   module: {
     rules: [
