@@ -35,13 +35,15 @@ app.use('*', (req, res, next) => {
   });
 });
 
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   // err MUST be in format:
   // { code: status code, message: message to user, log: message to server operator }
   console.log(err.log);
   return res.status(err.code).json(err.message);
 });
 
-module.exports = app.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(`Listening on http://localhost:${PORT}`);
 });
+
+module.exports = app;

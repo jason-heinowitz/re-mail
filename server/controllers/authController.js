@@ -37,7 +37,7 @@ authController.isUsernameValid = (req, res, next) => {
       return next({
         code: 400,
         message: 'Username and/or password are incorrect.',
-        log: 'loginController.verifyUser: Password does not exist for user',
+        log: `loginController.verifyUser: passCondition(${passCondition}) failed(${doesUserExist})`,
       });
     }
 
@@ -47,10 +47,91 @@ authController.isUsernameValid = (req, res, next) => {
 };
 
 // check if username/ password is good
+authController.checkUsernamePassword = (req, res, next) => {
+  const { username, password } = req.body;
 
-// create user with supplied information
+  const getHashedPasswordQuery = `SELECT u.password FROM users u WHERE username='${username}'`;
+  pool.query(getHashedPasswordQuery, (err, qres) => {
+    if (err) {
+      return next({
+        code: 500,
+        message: 'Unable to complete your login request at this time.',
+        log: `authController.checkUsernamePassword: failed to query DB for password with username(${username})`,
+      });
+    }
+
+    const hashedPassword = qres.rows[0].password;
+
+    // password retrieved successfully - check against bcrypt
+    bcrypt.compare(password, hashedPassword, (berr, result) => {
+      if (berr) {
+        return next({
+          code: 403,
+          message: 'Username and/or password are incorrect.',
+          log: `loginController.checkUsernamePassword: brcypt errored when comparing passwords(${password}-${hashedPassword})`,
+        });
+      }
+
+      // if password is good
+      if (result) return next();
+
+      return next({
+        code: 403,
+        message: 'Username and/or password are incorrect.',
+        log: `loginController.checkUsernamePassword: user-supplied password(${password}) does not match encrypted password(${hashedPassword})`,
+      });
+    });
+    // WARNING: outside bcrypt verification
+  });
+  // WARNING: outside password query
+};
 
 // create session
+authController.createSession = (req, res, next) => {
+  const { username } = req.body;
+
+  jwt.sign(
+    {
+      username,
+    },
+    SECRET_KEY,
+    (err, token) => {
+      if (err) {
+        return next({
+          code: 500,
+          message: 'Could not log in at this time.',
+          log:
+            'loginController.createSession: failed to create JWT(${username})',
+        });
+      }
+
+      res.cookie('token', token, {
+        httpOnly: true,
+      });
+      return res.status(200).json('Created session');
+    }
+  );
+  // WARNING: outside jwt creation
+};
+
+// validate JWT
+authController.validateJWT = (req, res, next) => {
+  const { token } = req.cookies;
+  jwt.verify(token, SECRET_KEY, (err, usernameObj) => {
+    if (err) {
+      return next({
+        code: 403,
+        message: 'Could not verify user.',
+        log: 'loginController.verifyJWT: user passed invalid JWT to server',
+      });
+    }
+
+    return res.status(200).json(usernameObj.username);
+  });
+  // WARNING: outside JWT validation
+};
+
+// create user with supplied information
 
 // get list of [verfied] users
 
