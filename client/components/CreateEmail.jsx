@@ -1,8 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
 
 const CreateEmail = (props) => {
   const [to, setTo] = useState('');
   const [body, setBody] = useState('');
+  const [users, setUsers] = useState([]);
+
+  const getUsers = () => {
+    fetch('/auth/users')
+      .then((res) => res.json())
+      .then((data) => {
+        const newAr = data.map((obj) => obj.username);
+
+        setUsers(newAr);
+      });
+  };
+
+  useEffect(getUsers, []);
 
   const checkEmail = ({ to, body }) => {
     if (to.length < 1) {
@@ -20,13 +34,24 @@ const CreateEmail = (props) => {
     props.sendEmail({ to: newTo, body });
   };
 
+  const toD = users.map((name) => {
+    return (
+      <button onClick={() => setTo(`${name}@codesmith.io`)}>{name}</button>
+    );
+  });
+
+  toD.push(<button onClick={() => setTo('')}>Clear To</button>);
+
   return (
     <div>
       <h2>Create Email</h2>
+      {toD}
+      <br />
 
       <label htmlFor="to">
-        To:
+        To: (case sensitive! and can only send to @codesmith.io addresses)
         <input
+          disabled
           type="text"
           name="to"
           id="to"

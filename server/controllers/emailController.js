@@ -66,4 +66,24 @@ emailController.getEmails = (req, res, next) => {
   });
 };
 
+emailController.deleteEmail = (req, res, next) => {
+  const { id } = req.body;
+
+  Email.findByIdAndDelete(id, (err, response) => {
+    if (err) {
+      return next({
+        code: 403,
+        message: 'Unable to delete email at this time.',
+        log: 'emailController.deleteEmail: DB errored when deleting user email',
+      });
+    }
+
+    return res.status(200).json('Deleted email successfully');
+  });
+};
+
+emailController.sendUser = (req, res, next) => {
+  return res.status(200).json({ username: res.locals.username });
+};
+
 module.exports = emailController;

@@ -11,6 +11,7 @@ const Email = memo((props) => {
       <p>From: {from}</p>
       <p>Date: {date}</p>
       <p>{body}</p>
+      <button onClick={() => props.deleteEmail(_id)}>Delete</button>
     </div>
   );
 });

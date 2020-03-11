@@ -3,7 +3,8 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 
 const initialState = {
-  authed: null,
+  authed: false,
+  first: true,
 };
 
 /*
@@ -19,11 +20,13 @@ const loginReducer = (state = initialState, action) => {
       return {
         ...state,
         authed: true,
+        first: false,
       };
     case types.LOGIN_FAIL:
       return {
         ...state,
         authed: false,
+        first: false,
       };
     case types.LOGOUT_SUCESS:
       return {
@@ -31,9 +34,15 @@ const loginReducer = (state = initialState, action) => {
         authed: false,
       };
     case types.REGISTER_SUCCESS:
-      return state;
+      return {
+        ...state,
+        authed: true,
+      };
     case types.REGISTER_FAIL:
-      return state;
+      return {
+        ...state,
+        authed: false,
+      };
     default:
       return state;
   }

@@ -1,4 +1,5 @@
 import { take, call, put, fork, cancelled, cancel } from 'redux-saga/effects';
+import { push } from 'connected-react-router';
 import * as actions from '../actions/loginActions';
 import * as types from '../constants/sagaTypes';
 
@@ -87,6 +88,7 @@ export function* watchAuth() {
     } else if (loa.type === types.STOP_LOGIN) {
       // clean up when log in fails
       cancel(action);
+      yield put(actions.loginFail());
     }
     yield call(clearAuth);
   }
@@ -115,5 +117,63 @@ export function* watchRegister() {
   while (true) {
     const user = yield take(types.REGISTER);
     yield call(register, user.user);
+  }
+}
+
+function* editPassword({ oldPassword, newPassword }) {
+  try {
+    const res = yield call(fetch, '/api/check');
+
+    if (res.status !== 200) yield put({ type: types.STOP_PASSWORD });
+    const { username } = yield call([res, 'json']);
+
+    const response = yield call(fetch, '/auth/checkLogin', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username,
+        password: oldPassword,
+      }),
+    });
+
+    if (response.status !== 200) yield put({ type: types.STOP_PASSWORD });
+    else {
+      // change password after all checks pass
+      const finResponse = yield call(fetch, '/auth/password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username,
+          newPassword,
+        }),
+      });
+
+      const fr = yield call([finResponse, 'json']);
+      console.log(fr);
+      yield put({ type: types.PASSWORD_GOOD });
+      yield put(push('/emails'));
+    }
+  } catch (e) {
+    console.log(e);
+  } finally {
+    if (yield cancelled()) {
+      console.log('Login cacelled by user.');
+    }
+  }
+}
+
+export function* watchPasswordChange() {
+  while (true) {
+    const { passwords } = yield take(types.CHANGE_PASSWORD);
+    const action = yield fork(editPassword, passwords);
+
+    const waiting = yield take([types.STOP_PASSWORD, types.PASSWORD_GOOD]);
+    if (waiting.type === types.STOP_PASSWORD) {
+      cancel(action);
+    }
   }
 }

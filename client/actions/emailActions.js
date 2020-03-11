@@ -16,3 +16,11 @@ export const ses = () => ({
 export const sef = () => ({
   type: types.SEND_EMAIL_FAIL,
 });
+
+export const des = () => ({
+  type: types.DELETE_EMAIL_SUCCESS,
+});
+
+export const def = () => ({
+  type: types.DELETE_EMAIL_FAIL,
+});

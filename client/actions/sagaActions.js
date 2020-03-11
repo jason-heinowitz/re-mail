@@ -28,3 +28,13 @@ export const sendEmail = ({ to, body }) => ({
   to,
   body,
 });
+
+export const delEmail = (id) => ({
+  type: types.DELETE_EMAIL,
+  id,
+});
+
+export const changePassword = (passwords) => ({
+  type: types.CHANGE_PASSWORD,
+  passwords,
+});

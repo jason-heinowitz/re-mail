@@ -15,6 +15,8 @@ const emailReducer = (state = initialState, action) => {
       return state;
     case types.SEND_EMAIL_FAIL:
       return state;
+    case types.DELETE_EMAIL_SUCCESS:
+      return state;
     default:
       return state;
   }

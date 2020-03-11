@@ -158,4 +158,56 @@ loginController.verifyJWT = (req, res, next) => {
   });
 };
 
+loginController.getUsers = (req, res, next) => {
+  const users = `SELECT username FROM users`;
+  pool.query(users, (err, response) => {
+    if (err) {
+      return next({
+        code: 403,
+        message: 'Could not retrieve users at this time.',
+        log:
+          'loginController.getUsers: DB errored when retrieving current users',
+      });
+    }
+
+    res.status(200).json(response.rows);
+  });
+};
+
+loginController.sendVerify = (req, res, next) => {
+  return res.status(200).json('Login good');
+};
+
+loginController.changePassword = (req, res, next) => {
+  const { newPassword, username } = req.body;
+  // console.log(newPassword);
+
+  bcrypt.hash(newPassword, SALT_ROUNDS, (err, hashedPassword) => {
+    if (err) {
+      return next({
+        code: 403,
+        message: 'Unable to create user at this time.',
+        log:
+          "loginController.changePassword: brcypt failed to hash user's password",
+      });
+    }
+
+    console.log(hashedPassword, username);
+
+    const updatePassword = `UPDATE users SET password='${hashedPassword}' WHERE username='${username}'`;
+    pool.query(updatePassword, (dberr, didPasswordUpdate) => {
+      if (dberr) {
+        console.log(dberr);
+        return next({
+          code: 403,
+          message: 'Unable to update password at this time.',
+          log: 'loginController.changePassword: db errored on user update',
+        });
+      }
+
+      res.status(200).json('Password update successful');
+    });
+  });
+};
+
 module.exports = loginController;

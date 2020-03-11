@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Email from './Email';
+import { Redirect } from 'react-router';
 
 // const Emails = (props) => {
 //   // ;
@@ -25,7 +26,7 @@ class Emails extends Component {
 
   render() {
     const emails = this.props.emails.map((em) => (
-      <Email content={em} key={em._id} />
+      <Email content={em} key={em._id} deleteEmail={this.props.deleteEmail} />
     ));
 
     return (

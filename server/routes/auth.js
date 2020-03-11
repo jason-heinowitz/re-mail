@@ -23,4 +23,14 @@ router.post(
 // Validate cookies
 router.get('/check', loginController.verifyJWT);
 
+router.get('/users', loginController.getUsers);
+
+router.post(
+  '/checkLogin',
+  loginController.verifyUser,
+  loginController.sendVerify
+);
+
+router.post('/password', loginController.changePassword);
+
 module.exports = router;
