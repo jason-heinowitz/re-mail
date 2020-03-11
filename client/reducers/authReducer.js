@@ -7,6 +7,19 @@ const initialState = {
 
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
+    case types.LOGIN_SUCCESS:
+      return {
+        ...state,
+        authed: true,
+        firstLoad: false,
+      };
+
+    case types.LOGIN_FAILED:
+      return {
+        ...state,
+        authed: false,
+        firstLoad: false,
+      };
     default:
       return state;
   }

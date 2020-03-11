@@ -72,7 +72,7 @@ describe('API Tests', () => {
       };
 
       return request(server)
-        .post('/auth/validate')
+        .get('/auth/validate')
         .set('Cookie', ['token=completelyInvalidJWT'])
         .expect('Content-Type', /application\/json/)
         .expect(403);

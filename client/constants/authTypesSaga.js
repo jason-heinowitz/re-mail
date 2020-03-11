@@ -4,3 +4,4 @@ export const REGISTER = 'REGISTER';
 
 export const LOGOUT = 'LOGOUT';
 export const STOP_LOGIN = 'STOP_LOGIN';
+export const STOP_REGISTER = 'STOP_REGISTER';

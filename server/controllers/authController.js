@@ -132,6 +132,34 @@ authController.validateJWT = (req, res, next) => {
 };
 
 // create user with supplied information
+authController.createUser = (req, res, next) => {
+  const { username, password, firstname, lastname } = req.body;
+
+  bcrypt.hash(password, SALT_ROUNDS, (err, hashedPassword) => {
+    if (err) {
+      return next({
+        code: 403,
+        message: 'Unable to create user at this time.',
+        log: `loginController.createUser: brcypt failed to hash user's password${password}`,
+      });
+    }
+
+    const createUserQuery = `INSERT INTO users (username, password, firstname, lastname) VALUES ('${username}', '${hashedPassword}', '${firstname}', '${lastname}')`;
+    pool.query(createUserQuery, (perr) => {
+      if (perr) {
+        return next({
+          error: 403,
+          message: 'Could not create user at this time.',
+          log: 'loginController.createUser: DB failed to create a new user',
+        });
+      }
+
+      return next();
+    });
+    // WARNING: outside of pool query
+  });
+  // WARNING: outside of bcrypt hashing
+};
 
 // get list of [verfied] users
 

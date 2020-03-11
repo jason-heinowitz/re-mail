@@ -10,10 +10,15 @@ router.post(
 );
 
 // Register
-router.post('/register');
+router.post(
+  '/register',
+  authController.isUsernameValid,
+  authController.createUser,
+  authController.createSession
+);
 
 // Validate JWT
-router.post('/validate', authController.validateJWT);
+router.get('/validate', authController.validateJWT);
 
 // Get users
 router.get('/users');

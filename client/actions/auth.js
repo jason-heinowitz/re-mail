@@ -33,3 +33,20 @@ export const logoutSuccess = () => ({
 export const logoutFailed = () => ({
   type: types.LOGOUT_FAILED,
 });
+
+// register
+export const registerStarted = () => ({
+  type: types.REGISTER_STARTED,
+});
+
+export const registerComplete = () => ({
+  type: types.REGISTER_COMPLETE,
+});
+
+export const registerSuccess = () => ({
+  type: types.REGISTER_SUCCESS,
+});
+
+export const registerFailed = () => ({
+  type: types.REGISTER_FAILED,
+});
