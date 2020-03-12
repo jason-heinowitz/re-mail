@@ -3,6 +3,7 @@ import { push } from 'connected-react-router';
 
 import * as types from '../constants/emailTypesSaga';
 import * as actions from '../actions/email';
+import * as flash from '../actions/flashSaga';
 
 // helpers
 const ac = (method, body) => ({
@@ -33,8 +34,20 @@ function* sendEmail({ to, body }) {
 
   if (sendEmailResponse.status !== 200) {
     yield put(actions.sendEmailFailed());
+    yield put(
+      flash.create({
+        message: 'Faild to send message.',
+        group: 'error',
+      })
+    );
   } else {
     yield put(actions.sendEmailSuccess());
+    yield put(
+      flash.create({
+        message: 'Email sent successfully!',
+        group: 'success',
+      })
+    );
     yield put(push('/emails'));
   }
 }

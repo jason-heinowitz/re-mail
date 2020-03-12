@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 const CreateEmail = (props) => {
   const [to, setTo] = useState('');
   const [body, setBody] = useState('');
-  const [users, setUsers] = useState([]);
 
   // const getUsers = () => {
   //   fetch('/auth/users')

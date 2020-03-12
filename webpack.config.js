@@ -29,7 +29,7 @@ module.exports = {
         },
       },
       {
-        test: /.(c|s[ac])ss$/,
+        test: /.s[ac]ss$/,
         use: ['style-loader', 'css-loader', 'sass-loader'],
       },
     ],

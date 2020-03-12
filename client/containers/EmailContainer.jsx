@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useRouteMatch, Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -18,6 +18,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 const EmailContainer = (props) => {
   // props.getEmails();
+  const [isNew, setIsNew] = useState(false);
 
   const { url } = useRouteMatch();
 
@@ -31,7 +32,15 @@ const EmailContainer = (props) => {
       <button onClick={props.getEmails} type="submit">
         Get emails
       </button>
-      <Link to={`${url}/create`}>New Email</Link>
+      {isNew === false ? (
+        <Link to={`${url}/create`} onClick={() => setIsNew(true)}>
+          New Email
+        </Link>
+      ) : (
+        <Link to="/emails" onClick={() => setIsNew(false)}>
+          Cancel
+        </Link>
+      )}
 
       <Switch>
         <Route path={`${url}/create`}>

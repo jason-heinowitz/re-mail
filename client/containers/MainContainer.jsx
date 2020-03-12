@@ -12,6 +12,8 @@ import EmailContainer from './EmailContainer';
 import NewPassword from '../components/NewPassword';
 import Flash from '../components/Flash';
 
+import './style.scss';
+
 const mapStateToProps = (state) => ({
   authed: state.auth.authed,
   firstLoad: state.auth.firstLoad,

@@ -1,0 +1,29 @@
+.success {
+  width: 200px;
+  border: none;
+  border-radius: 5px;
+  background-color: lightgreen;
+  color: black;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+
+  p {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.error {
+  width: 200px;
+  border: none;
+  border-radius: 5px;
+  background-color: red;
+  color: black;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+
+  p {
+    margin: 0;
+    padding: 0;
+  }
+}
