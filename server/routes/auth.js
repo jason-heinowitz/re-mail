@@ -26,7 +26,14 @@ router.get('/validate', authController.validateJWT);
 // Get users
 router.get('/users');
 
+// Get own username
+router.get('/self', authController.getUsername);
+
 // Change password
-router.post('/newPassword');
+router.post(
+  '/newPassword',
+  authController.checkUsernamePassword,
+  authController.updatePassword
+);
 
 module.exports = router;

@@ -17,7 +17,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const EmailContainer = (props) => {
-  // useEffect(props.getEmails, []);
+  // props.getEmails();
 
   const { url } = useRouteMatch();
 
@@ -27,7 +27,7 @@ const EmailContainer = (props) => {
 
   return (
     <>
-      <h1>Email container</h1>
+      <h3>Emails</h3>
       <button onClick={props.getEmails} type="submit">
         Get emails
       </button>

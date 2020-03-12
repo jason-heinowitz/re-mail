@@ -18,3 +18,9 @@ export const register = (user) => ({
 export const logout = () => ({
   type: types.LOGOUT,
 });
+
+export const changePassword = ({ newPassword, oldPassword }) => ({
+  type: types.CHANGE_PASSWORD,
+  newPassword,
+  oldPassword,
+});

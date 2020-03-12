@@ -13,6 +13,23 @@ const pool = new Pool({
 
 const authController = {};
 
+authController.getUsername = (req, res, next) => {
+  const { token } = req.cookies;
+  jwt.verify(token, SECRET_KEY, (err, payload) => {
+    if (err) {
+      return next({
+        code: 403,
+        message: 'Could not get user at this time.',
+        log: 'emailController.getUser: user passed invalid JWT to server',
+      });
+    }
+
+    // res.locals.username = payload.username;
+    return res.status(200).json(payload.username);
+  });
+  // WARNING: outside jwt verification
+};
+
 // check if username is valid for operation
 authController.isUsernameValid = (req, res, next) => {
   /* passCondition is true or false depending on what the requester needs the
@@ -49,6 +66,7 @@ authController.isUsernameValid = (req, res, next) => {
 // check if username/ password is good
 authController.checkUsernamePassword = (req, res, next) => {
   const { username, password } = req.body;
+  console.log(req.body);
 
   const getHashedPasswordQuery = `SELECT u.password FROM users u WHERE username='${username}'`;
   pool.query(getHashedPasswordQuery, (err, qres) => {
@@ -59,6 +77,8 @@ authController.checkUsernamePassword = (req, res, next) => {
         log: `authController.checkUsernamePassword: failed to query DB for password with username(${username})`,
       });
     }
+
+    console.log(qres);
 
     const hashedPassword = qres.rows[0].password;
 
@@ -170,5 +190,34 @@ authController.createUser = (req, res, next) => {
 // get list of [verfied] users
 
 // update password of user
+authController.updatePassword = (req, res, next) => {
+  const { newPassword, username } = req.body;
+
+  bcrypt.hash(newPassword, SALT_ROUNDS, (err, hashedPassword) => {
+    if (err) {
+      return next({
+        code: 403,
+        message: 'Unable to create user at this time.',
+        log:
+          "loginController.changePassword: brcypt failed to hash user's password",
+      });
+    }
+
+    console.log(hashedPassword, username);
+
+    const updatePassword = `UPDATE users SET password='${hashedPassword}' WHERE username='${username}'`;
+    pool.query(updatePassword, (dberr, didPasswordUpdate) => {
+      if (dberr) {
+        return next({
+          code: 403,
+          message: 'Unable to update password at this time.',
+          log: 'loginController.changePassword: db errored on user update',
+        });
+      }
+
+      res.status(200).json('Password update successful');
+    });
+  });
+};
 
 module.exports = authController;

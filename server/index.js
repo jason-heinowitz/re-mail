@@ -4,7 +4,7 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 
 const app = express();
-const PORT = 8080;
+const PORT = 8000;
 
 const auth = require('./routes/auth');
 const emails = require('./routes/email');
@@ -25,6 +25,10 @@ if (process.env.NODE_ENV === 'production') {
   });
 
   app.listen(3000); // listens on port 3000 -> http://localhost:3000/
+} else {
+  app.listen(PORT, () => {
+    console.log(`Listening on http://localhost:${PORT}`);
+  });
 }
 
 // catch all
@@ -41,10 +45,6 @@ app.use((err, req, res, next) => {
   // { code: status code, message: message to user, log: message to server operator }
   console.log(err.log);
   return res.status(err.code).json(err.message);
-});
-
-app.listen(PORT, () => {
-  console.log(`Listening on http://localhost:${PORT}`);
 });
 
 module.exports = app;

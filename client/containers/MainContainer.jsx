@@ -8,6 +8,7 @@ import * as actions from '../actions/authSaga';
 import Login from '../components/Login';
 import Register from '../components/Register';
 import EmailContainer from './EmailContainer';
+import NewPassword from '../components/NewPassword';
 
 const mapStateToProps = (state) => ({
   authed: state.auth.authed,
@@ -19,6 +20,7 @@ const mapDispatchToProps = (dispatch) => ({
   login: (userObj) => dispatch(actions.login(userObj)),
   logout: () => dispatch(actions.logout()),
   register: (userObj) => dispatch(actions.register(userObj)),
+  newPassword: (obj) => dispatch(actions.changePassword(obj)),
 });
 
 const MainContainer = (props) => {
@@ -46,6 +48,7 @@ const MainContainer = (props) => {
             ) : (
               <>
                 <Link to="/emails">Emails</Link>
+                <Link to="/newPassword">Change Password</Link>
                 <button onClick={props.logout} type="submit">
                   Logout
                 </button>
@@ -61,6 +64,9 @@ const MainContainer = (props) => {
           </Route>
           <Route path="/register">
             <Register register={props.register} />
+          </Route>
+          <Route path="/newPassword">
+            <NewPassword newPassword={props.newPassword} />
           </Route>
           <Route path="/emails">
             <EmailContainer />

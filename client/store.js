@@ -5,7 +5,7 @@ import createSagaMiddleware from 'redux-saga';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 import reducerCreator from './reducers/reducerCreator';
-import { watchAuth } from './sagas/authSaga';
+import { watchAuth, watchNewPassword } from './sagas/authSaga';
 import { watchGet, watchDelete, watchSend } from './sagas/emailSaga';
 
 export const history = createBrowserHistory();
@@ -21,6 +21,7 @@ const store = createStore(
 );
 
 sagaMiddleware.run(watchAuth);
+sagaMiddleware.run(watchNewPassword);
 sagaMiddleware.run(watchGet);
 sagaMiddleware.run(watchDelete);
 sagaMiddleware.run(watchSend);

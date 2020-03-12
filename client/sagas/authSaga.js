@@ -1,4 +1,12 @@
-import { take, fork, cancel, call, put, cancelled } from 'redux-saga/effects';
+import {
+  take,
+  takeLeading,
+  fork,
+  cancel,
+  call,
+  put,
+  cancelled,
+} from 'redux-saga/effects';
 import { push } from 'connected-react-router';
 
 import * as types from '../constants/authTypesSaga';
@@ -84,7 +92,37 @@ function* register(userObj) {
 function* logout() {
   yield call(fetch, '/auth/logout', ac('POST'));
   yield put(actions.logoutSuccess());
-  yield put(push('/'));
+  yield put(push('/login'));
+}
+
+function* changePassword({ newPassword, oldPassword }) {
+  const getUsername = yield call(fetch, '/auth/self');
+
+  if (getUsername.status !== 200) {
+    yield put({ type: types.STOP_PASSWORD });
+  }
+
+  const ures = yield call([getUsername, 'json']);
+
+  const username = ures;
+
+  const passwordResponse = yield call(
+    fetch,
+    '/auth/newPassword',
+    ac('POST', {
+      username,
+      password: oldPassword,
+      newPassword,
+    })
+  );
+
+  if (passwordResponse.status !== 200) {
+    yield put({ type: types.STOP_PASSWORD });
+  }
+
+  yield put(actions.changePasswordSuccess());
+  yield put({ type: types.PASSWORD_PASS });
+  yield put({ type: types.LOGOUT });
 }
 
 // watchers
@@ -125,4 +163,17 @@ export function* watchAuth() {
 }
 
 // waits for new password
-export function* watchNewPassword() {}
+export function* watchNewPassword() {
+  // yield takeLeading(types.CHANGE_PASSWORD, changePassword);
+
+  while (true) {
+    const ex = yield take(types.CHANGE_PASSWORD);
+    const { newPassword, oldPassword } = ex;
+    const action = yield fork(changePassword, { newPassword, oldPassword });
+
+    const eb = yield take([types.STOP_PASSWORD, types.PASSWORD_PASS]);
+    if (eb.type === types.STOP_PASSWORD) {
+      cancel(action);
+    }
+  }
+}

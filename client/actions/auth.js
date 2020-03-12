@@ -50,3 +50,20 @@ export const registerSuccess = () => ({
 export const registerFailed = () => ({
   type: types.REGISTER_FAILED,
 });
+
+// change password
+export const changePasswordStarted = () => ({
+  type: types.CHANGE_PASSWORD_STARTED,
+});
+
+export const changePasswordComplete = () => ({
+  type: types.CHANGE_PASSWORD_COMPLETE,
+});
+
+export const changePasswordSuccess = () => ({
+  type: types.CHANGE_PASSWORD_SUCCESS,
+});
+
+export const changePasswordFailed = () => ({
+  type: types.CHANGE_PASSWORD_FAILED,
+});
