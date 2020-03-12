@@ -17,6 +17,9 @@ router.post(
   authController.createSession
 );
 
+// Logout
+router.post('/logout', authController.logout);
+
 // Validate JWT
 router.get('/validate', authController.validateJWT);
 

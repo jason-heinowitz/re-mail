@@ -20,6 +20,20 @@ const authReducer = (state = initialState, action) => {
         authed: false,
         firstLoad: false,
       };
+
+    case types.REGISTER_SUCCESS:
+      return {
+        ...state,
+        authed: true,
+        firstLoad: false,
+      };
+
+    case types.LOGOUT_SUCCESS:
+      return {
+        ...state,
+        authed: false,
+        firstLoad: false,
+      };
     default:
       return state;
   }

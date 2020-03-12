@@ -3,7 +3,6 @@ import MainContainer from '../containers/MainContainer';
 
 const App = () => (
   <div>
-    <h1>App</h1>
     <MainContainer />
   </div>
 );

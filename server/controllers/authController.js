@@ -114,6 +114,12 @@ authController.createSession = (req, res, next) => {
   // WARNING: outside jwt creation
 };
 
+// log user out
+authController.logout = (req, res) => {
+  res.cookie('token', 'logged-out');
+  res.status(200).send('Logged out');
+};
+
 // validate JWT
 authController.validateJWT = (req, res, next) => {
   const { token } = req.cookies;

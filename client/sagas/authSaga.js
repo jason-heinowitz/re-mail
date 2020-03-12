@@ -1,4 +1,5 @@
 import { take, fork, cancel, call, put, cancelled } from 'redux-saga/effects';
+import { push } from 'connected-react-router';
 
 import * as types from '../constants/authTypesSaga';
 import * as actions from '../actions/auth';
@@ -36,6 +37,7 @@ function* login(username, password) {
     if (loginResponse.status !== 200) yield put({ type: types.STOP_LOGIN });
 
     yield put(actions.loginSuccess());
+    yield put(push('/emails'));
   } finally {
     if (yield cancelled()) yield put(actions.loginFailed());
   }
@@ -75,9 +77,15 @@ function* register(userObj) {
   }
 
   yield put(actions.registerSuccess());
+  yield put(push('/'));
+  yield put(push('/emails'));
 }
 
-function* logout() {}
+function* logout() {
+  yield call(fetch, '/auth/logout', ac('POST'));
+  yield put(actions.logoutSuccess());
+  yield put(push('/'));
+}
 
 // watchers
 // waits for login, cookies, and regstration, then waits for logout and login failure
@@ -109,8 +117,9 @@ export function* watchAuth() {
     ]);
 
     const saType = stopAuth.type;
-    if (saType === types.LOGOUT) yield call(logout);
-    else if (saType === types.STOP_LOGIN) yield cancel(action);
+    if (saType === types.LOGOUT) {
+      yield call(logout);
+    } else if (saType === types.STOP_LOGIN) yield cancel(action);
     else if (saType === types.STOP_REGISTER) yield cancel(action);
   }
 }

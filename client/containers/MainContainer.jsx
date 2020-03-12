@@ -7,6 +7,7 @@ import * as actions from '../actions/authSaga';
 
 import Login from '../components/Login';
 import Register from '../components/Register';
+import EmailContainer from './EmailContainer';
 
 const mapStateToProps = (state) => ({
   authed: state.auth.authed,
@@ -16,6 +17,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   checkCookies: () => dispatch(actions.checkCookies()),
   login: (userObj) => dispatch(actions.login(userObj)),
+  logout: () => dispatch(actions.logout()),
   register: (userObj) => dispatch(actions.register(userObj)),
 });
 
@@ -29,8 +31,6 @@ const MainContainer = (props) => {
   // Display action page after cookies are validated
   return (
     <>
-      <h1>Welcome to Re-Mail</h1>
-
       <ConnectedRouter history={history}>
         <div id="navbar">
           <div className="left">
@@ -38,8 +38,19 @@ const MainContainer = (props) => {
           </div>
           <div className="right">
             <Link to="/">Home</Link>
-            <Link to="/login">Login</Link>
-            <Link to="/register">Register</Link>
+            {props.authed === false ? (
+              <>
+                <Link to="/login">Login</Link>
+                <Link to="/register">Register</Link>
+              </>
+            ) : (
+              <>
+                <Link to="/emails">Emails</Link>
+                <button onClick={props.logout} type="submit">
+                  Logout
+                </button>
+              </>
+            )}
           </div>
         </div>
 
@@ -50,6 +61,10 @@ const MainContainer = (props) => {
           </Route>
           <Route path="/register">
             <Register register={props.register} />
+          </Route>
+          <Route path="/emails">
+            <EmailContainer />
+            {/* <h1>emails lol</h1> */}
           </Route>
         </Switch>
       </ConnectedRouter>
