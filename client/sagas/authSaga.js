@@ -11,6 +11,7 @@ import { push } from 'connected-react-router';
 
 import * as types from '../constants/authTypesSaga';
 import * as actions from '../actions/auth';
+import * as flash from '../actions/flashSaga';
 
 // helpers
 const ac = (method, body) => ({
@@ -24,14 +25,6 @@ const ac = (method, body) => ({
 // doers
 function* login(username, password) {
   try {
-    console.log(
-      ac('POST', {
-        username,
-        password,
-        passCondition: true,
-      })
-    );
-
     const loginResponse = yield call(
       fetch,
       '/auth/login',
@@ -45,6 +38,13 @@ function* login(username, password) {
     if (loginResponse.status !== 200) yield put({ type: types.STOP_LOGIN });
 
     yield put(actions.loginSuccess());
+    yield put(flash.clear());
+    yield put(
+      flash.create({
+        message: 'Log in successful!',
+        group: 'success',
+      })
+    );
     yield put(push('/emails'));
   } finally {
     if (yield cancelled()) yield put(actions.loginFailed());
@@ -85,7 +85,12 @@ function* register(userObj) {
   }
 
   yield put(actions.registerSuccess());
-  yield put(push('/'));
+  yield put(
+    flash.create({
+      message: 'Registration successful!',
+      group: 'success',
+    })
+  );
   yield put(push('/emails'));
 }
 
@@ -105,7 +110,6 @@ function* changePassword({ newPassword, oldPassword }) {
   const ures = yield call([getUsername, 'json']);
 
   const username = ures;
-  console.log('USERNAME: ', username);
 
   const passwordResponse = yield call(
     fetch,
@@ -122,6 +126,12 @@ function* changePassword({ newPassword, oldPassword }) {
   }
 
   yield put(actions.changePasswordSuccess());
+  yield put(
+    flash.create({
+      message: 'Password change successful!',
+      group: 'success',
+    })
+  );
   yield put({ type: types.PASSWORD_PASS });
   yield put({ type: types.LOGOUT });
 }
@@ -158,6 +168,12 @@ export function* watchAuth() {
     const saType = stopAuth.type;
     if (saType === types.LOGOUT) {
       yield call(logout);
+      yield put(
+        flash.create({
+          message: 'Log out successful!',
+          group: 'success',
+        })
+      );
     } else if (saType === types.STOP_LOGIN) yield cancel(action);
     else if (saType === types.STOP_REGISTER) yield cancel(action);
   }
