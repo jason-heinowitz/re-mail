@@ -44,7 +44,12 @@ const EmailContainer = (props) => {
           New Email
         </Link>
       ) : (
-        <Link to="/emails" onClick={() => setIsNew(false)}>
+        <Link
+          to="/emails"
+          onClick={() => {
+            setIsNew(false);
+            setReplyEmail('');
+          }}>
           Cancel
         </Link>
       )}

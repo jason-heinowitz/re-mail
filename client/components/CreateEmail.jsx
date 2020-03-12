@@ -43,31 +43,32 @@ const CreateEmail = (props) => {
 
   return (
     <div>
-      <h2>Create Email</h2>
-      {/* {toD} */}
-      <br />
+      <div className="form">
+        <h2>Create Email</h2>
+        <br />
 
-      <label htmlFor="to">
-        To:
-        <input
-          type="text"
-          name="to"
-          id="to"
-          value={to}
-          onChange={(e) => setTo(e.target.value)}
-        />
-      </label>
-      <label htmlFor="body">
-        Body:
-        <textarea
-          name="body"
-          id="body"
-          value={body}
-          onChange={(e) => setBody(e.target.value)}
-        />
-      </label>
+        <label htmlFor="to">
+          To:
+          <input
+            type="text"
+            name="to"
+            id="to"
+            value={to}
+            onChange={(e) => setTo(e.target.value)}
+          />
+        </label>
+        <label htmlFor="body">
+          Body:
+          <textarea
+            name="body"
+            id="body"
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+          />
+        </label>
 
-      <button onClick={() => checkEmail({ to, body })}>Send</button>
+        <button onClick={() => checkEmail({ to, body })}>Send</button>
+      </div>
     </div>
   );
 };

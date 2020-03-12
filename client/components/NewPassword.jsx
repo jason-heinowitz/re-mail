@@ -20,49 +20,51 @@ const NewPassword = (props) => {
 
   return (
     <div>
-      <h2>Change Password</h2>
+      <div className="form">
+        <h2>Change Password</h2>
 
-      <label htmlFor="oldPassword">
-        Old Password:
-        <input
-          type="text"
-          name="oldPassword"
-          id="oldPassword"
-          value={old}
-          onChange={(e) => setOld(e.target.value)}
-        />
-      </label>
-      <label htmlFor="newPassword">
-        New Password:
-        <input
-          type="text"
-          name="newPassword"
-          id="newPassword"
-          value={np}
-          onChange={(e) => setNp(e.target.value)}
-        />
-      </label>
-      <label htmlFor="confirmNewPassword">
-        Confirm New Password:
-        <input
-          type="text"
-          name="confirmNewPassword"
-          id="cofirmNewPassword"
-          value={npc}
-          onChange={(e) => setNpc(e.target.value)}
-        />
-      </label>
+        <label htmlFor="oldPassword">
+          Old Password:
+          <input
+            type="text"
+            name="oldPassword"
+            id="oldPassword"
+            value={old}
+            onChange={(e) => setOld(e.target.value)}
+          />
+        </label>
+        <label htmlFor="newPassword">
+          New Password:
+          <input
+            type="text"
+            name="newPassword"
+            id="newPassword"
+            value={np}
+            onChange={(e) => setNp(e.target.value)}
+          />
+        </label>
+        <label htmlFor="confirmNewPassword">
+          Confirm New Password:
+          <input
+            type="text"
+            name="confirmNewPassword"
+            id="cofirmNewPassword"
+            value={npc}
+            onChange={(e) => setNpc(e.target.value)}
+          />
+        </label>
 
-      <button
-        onClick={() =>
-          checkPassword({
-            oldPassword: old,
-            newPassword: np,
-            confirmNewPassword: npc,
-          })
-        }>
-        Submit
-      </button>
+        <button
+          onClick={() =>
+            checkPassword({
+              oldPassword: old,
+              newPassword: np,
+              confirmNewPassword: npc,
+            })
+          }>
+          Submit
+        </button>
+      </div>
     </div>
   );
 };

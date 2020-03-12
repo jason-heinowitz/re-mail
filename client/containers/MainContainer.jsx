@@ -49,7 +49,7 @@ const MainContainer = (props) => {
 
   // Display action page after cookies are validated
   return (
-    <>
+    <div className="container">
       <ConnectedRouter history={history}>
         <div id="navbar">
           <div className="left">
@@ -93,7 +93,7 @@ const MainContainer = (props) => {
           </Route>
         </Switch>
       </ConnectedRouter>
-    </>
+    </div>
   );
 };
 

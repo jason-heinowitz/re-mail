@@ -40,67 +40,69 @@ const Register = (props) => {
 
   return (
     <div>
-      <h2>Register</h2>
-      <label htmlFor="firstname">
-        First Name
-        <input
-          id="firstname"
-          name="firstname"
-          value={firstName}
-          onChange={(e) => setFirstname(e.target.value)}
-          placeholder='ex. "John"'
-        />
-      </label>
-      <label htmlFor="lastname">
-        Last Name
-        <input
-          id="lastname"
-          name="lastname"
-          value={lastName}
-          onChange={(e) => setLastname(e.target.value)}
-          placeholder='ex. "Smith"'
-        />
-      </label>
-      <label htmlFor="username">
-        Username
-        <input
-          id="username"
-          name="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder='ex. "l33th@x0r2013"'
-        />
-      </label>
-      <label htmlFor="password">
-        Password
-        <input
-          id="password"
-          name="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </label>
-      <label htmlFor="confirmpassword">
-        Confirm Password
-        <input
-          id="confirmpassword"
-          name="confirmpassword"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-        />
-      </label>
-      <button
-        onClick={() => {
-          attemptRegister({
-            firstname: firstName,
-            lastname: lastName,
-            username,
-            password,
-            confirmPassword,
-          });
-        }}>
-        Register
-      </button>
+      <div className="form">
+        <h2>Register</h2>
+        <label htmlFor="firstname">
+          First Name
+          <input
+            id="firstname"
+            name="firstname"
+            value={firstName}
+            onChange={(e) => setFirstname(e.target.value)}
+            placeholder='ex. "John"'
+          />
+        </label>
+        <label htmlFor="lastname">
+          Last Name
+          <input
+            id="lastname"
+            name="lastname"
+            value={lastName}
+            onChange={(e) => setLastname(e.target.value)}
+            placeholder='ex. "Smith"'
+          />
+        </label>
+        <label htmlFor="username">
+          Username
+          <input
+            id="username"
+            name="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder='ex. "l33th@x0r2013"'
+          />
+        </label>
+        <label htmlFor="password">
+          Password
+          <input
+            id="password"
+            name="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </label>
+        <label htmlFor="confirmpassword">
+          Confirm Password
+          <input
+            id="confirmpassword"
+            name="confirmpassword"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+        </label>
+        <button
+          onClick={() => {
+            attemptRegister({
+              firstname: firstName,
+              lastname: lastName,
+              username,
+              password,
+              confirmPassword,
+            });
+          }}>
+          Register
+        </button>
+      </div>
     </div>
   );
 };

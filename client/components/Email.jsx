@@ -14,7 +14,7 @@ const Email = memo((props) => {
   // };
 
   return (
-    <div style={{ borderBottom: '1px solid black' }}>
+    <div className="email">
       <p>To: {betterTo}</p>
       <p>From: {from}</p>
       <p>Date: {date}</p>
