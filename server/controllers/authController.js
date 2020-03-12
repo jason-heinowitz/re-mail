@@ -66,7 +66,7 @@ authController.isUsernameValid = (req, res, next) => {
 // check if username/ password is good
 authController.checkUsernamePassword = (req, res, next) => {
   const { username, password } = req.body;
-  console.log(req.body);
+  console.log(username, password);
 
   const getHashedPasswordQuery = `SELECT u.password FROM users u WHERE username='${username}'`;
   pool.query(getHashedPasswordQuery, (err, qres) => {
@@ -78,7 +78,7 @@ authController.checkUsernamePassword = (req, res, next) => {
       });
     }
 
-    console.log(qres);
+    // console.log(qres);
 
     const hashedPassword = qres.rows[0].password;
 

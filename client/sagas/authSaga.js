@@ -105,6 +105,7 @@ function* changePassword({ newPassword, oldPassword }) {
   const ures = yield call([getUsername, 'json']);
 
   const username = ures;
+  console.log('USERNAME: ', username);
 
   const passwordResponse = yield call(
     fetch,
