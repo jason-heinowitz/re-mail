@@ -19,11 +19,18 @@ const mapDispatchToProps = (dispatch) => ({
 const EmailContainer = (props) => {
   // props.getEmails();
   const [isNew, setIsNew] = useState(false);
+  const [replyEmail, setReplyEmail] = useState('');
 
   const { url } = useRouteMatch();
 
   const emails = props.emails.map((email) => (
-    <Email key={email._id} deleteEmail={props.deleteEmail} content={email} />
+    <Email
+      setIsNew={setIsNew}
+      key={email._id}
+      deleteEmail={props.deleteEmail}
+      content={email}
+      reply={setReplyEmail}
+    />
   ));
 
   return (
@@ -44,7 +51,11 @@ const EmailContainer = (props) => {
 
       <Switch>
         <Route path={`${url}/create`}>
-          <CreateEmail sendEmail={props.sendEmail} />
+          <CreateEmail
+            onSend={setIsNew}
+            autoTo={replyEmail}
+            sendEmail={props.sendEmail}
+          />
         </Route>
       </Switch>
       {emails.length > 0 ? emails.reverse() : <p>No emails to display</p>}

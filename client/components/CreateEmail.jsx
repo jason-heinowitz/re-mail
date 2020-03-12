@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const CreateEmail = (props) => {
-  const [to, setTo] = useState('');
+  const [to, setTo] = useState(props.autoTo);
   const [body, setBody] = useState('');
 
   // const getUsers = () => {
@@ -29,6 +29,7 @@ const CreateEmail = (props) => {
     let newTo = to.split(',');
     newTo = newTo.map((rec) => rec.trim());
 
+    props.onSend(false);
     props.sendEmail({ to: newTo, body });
   };
 
