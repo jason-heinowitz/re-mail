@@ -1,105 +1,98 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import {
-  BrowserRouter as Router,
-  Link,
-  Switch,
-  Route,
-  Redirect,
-} from 'react-router-dom';
-import Home from '../components/Home';
+import { ConnectedRouter } from 'connected-react-router';
+import { Link, Switch, Route, Redirect } from 'react-router-dom';
+import { history } from '../store';
+import * as actions from '../actions/authSaga';
+import * as flash from '../actions/flashSaga';
+
 import Login from '../components/Login';
-import Page404 from '../components/Page404';
-import Emails from '../components/Emails';
 import Register from '../components/Register';
-import CreateEmail from '../components/CreateEmail';
-import * as actions from '../actions/sagaActions';
+import EmailContainer from './EmailContainer';
+import NewPassword from '../components/NewPassword';
+import Flash from '../components/Flash';
+
+import './style.scss';
 
 const mapStateToProps = (state) => ({
-  authed: state.login.authed,
-  emails: state.email.emails,
+  authed: state.auth.authed,
+  firstLoad: state.auth.firstLoad,
+  flashes: state.flash.messages,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  // auth actions
-  login: (username, password) => dispatch(actions.login(username, password)),
+  checkCookies: () => dispatch(actions.checkCookies()),
+  login: (userObj) => dispatch(actions.login(userObj)),
   logout: () => dispatch(actions.logout()),
-  checkCookies: () => dispatch(actions.check()),
-  register: (user) => {
-    dispatch(actions.register(user));
-  },
-
-  // email actions
-  getEmails: () => dispatch(actions.getEmails()),
-  sendEmail: (obj) => dispatch(actions.sendEmail(obj)),
+  register: (userObj) => dispatch(actions.register(userObj)),
+  newPassword: (obj) => dispatch(actions.changePassword(obj)),
+  remove: (index) => dispatch(flash.remove(index)),
 });
 
 const MainContainer = (props) => {
   useEffect(props.checkCookies, []);
 
-  return (
-    <div>
-      <h1>Main Container</h1>
-      <button onClick={props.logout}>Logout</button>
+  if (props.firstLoad === true) {
+    return <h1>Please wait while your information loads...</h1>;
+  }
 
-      <Router>
-        <Link to="/">Home</Link>
-        {props.authed === false ? (
-          <>
-            <Link to="/login">Login</Link>
-            <Link to="/register">Register</Link>
-          </>
-        ) : (
-          <>
-            <Link to="/emails">Emails</Link>
-            <Link to="/create">Create Email</Link>
-          </>
-        )}
+  // create flash messages for user
+  const flashMessages = props.flashes.map((flash, index) => (
+    <Flash
+      key={flash.message}
+      index={index}
+      remove={props.remove}
+      message={flash.message}
+      group={flash.group}
+    />
+  ));
+
+  // Display action page after cookies are validated
+  return (
+    <div className="container">
+      <ConnectedRouter history={history}>
+        <div id="navbar">
+          <div className="left">
+            <h3>Re-Mail</h3>
+          </div>
+          <div className="right">
+            <Link to="/">Home</Link>
+            {props.authed === false ? (
+              <>
+                <Link to="/login">Login</Link>
+                <Link to="/register">Register</Link>
+              </>
+            ) : (
+              <>
+                <Link to="/emails">Emails</Link>
+                <Link to="/newPassword">Change Password</Link>
+                <button onClick={props.logout} type="submit">
+                  Logout
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+
+        {flashMessages}
 
         <Switch>
-          <Route path="/" exact>
-            <Home />
+          <Route path="/" exact></Route>
+          <Route path="/login">
+            <Login login={props.login} />
           </Route>
-
-          {props.authed === false ? (
-            <>
-              <Route path="/login">
-                <Login login={props.login} />
-              </Route>
-              <Route path="/register">
-                <Register register={props.register} />
-              </Route>
-
-              <Route path="/emails">
-                <Redirect to="/" />
-              </Route>
-              <Route path="/create">
-                <Redirect to="/" />
-              </Route>
-            </>
-          ) : (
-            <>
-              <Route path="/login">
-                <Redirect to="/emails" />
-              </Route>
-              <Route path="/register">
-                <Redirect to="/emails" />
-              </Route>
-
-              <Route path="/emails">
-                <Emails getEmails={props.getEmails} emails={props.emails} />
-              </Route>
-              <Route path="/create">
-                <CreateEmail sendEmail={props.sendEmail} />
-              </Route>
-            </>
-          )}
-
-          <Route>
-            <Page404 />
+          <Route path="/register">
+            <Register register={props.register} />
+          </Route>
+          <Route path="/newPassword">
+            <NewPassword newPassword={props.newPassword} />
+          </Route>
+          <Route path="/emails">
+            <EmailContainer />
+            {/* <h1>emails lol</h1> */}
           </Route>
         </Switch>
-      </Router>
+      </ConnectedRouter>
     </div>
   );
 };

@@ -1,39 +1,83 @@
-import { takeEvery, take, call, put } from 'redux-saga/effects';
-import * as actions from '../actions/emailActions';
-import * as types from '../constants/sagaTypes';
+import { takeEvery, takeLeading, call, put } from 'redux-saga/effects';
+import { push } from 'connected-react-router';
 
+import * as types from '../constants/emailTypesSaga';
+import * as actions from '../actions/email';
+import * as flash from '../actions/flashSaga';
+
+// helpers
+const ac = (method, body) => ({
+  method,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify(body),
+});
+
+// doers
 function* getEmails() {
-  const response = yield call(fetch, '/api/emails');
-  const emails = yield call([response, 'json']);
-  if (response.status === 200) {
-    yield put(actions.ges(emails));
-  } else yield put(actions.gef());
+  const getEmailResponse = yield call(fetch, '/api/emails');
+
+  if (getEmailResponse.status !== 200) yield put(actions.getEmailFailed());
+  else {
+    const data = yield call([getEmailResponse, 'json']);
+    yield put(actions.getEmailSuccess(data));
+  }
 }
 
-export function* watchEmails() {
+function* sendEmail({ to, body }) {
+  const sendEmailResponse = yield call(
+    fetch,
+    '/api/email',
+    ac('POST', { to, body })
+  );
+
+  if (sendEmailResponse.status !== 200) {
+    yield put(actions.sendEmailFailed());
+    yield put(
+      flash.create({
+        message: 'Faild to send message.',
+        group: 'error',
+      })
+    );
+  } else {
+    yield put(actions.sendEmailSuccess());
+    yield put(
+      flash.create({
+        message: 'Email sent successfully!',
+        group: 'success',
+      })
+    );
+    yield put(push('/emails'));
+  }
+}
+
+function* deleteEmail({ id }) {
+  const deleteEmailResponse = yield call(
+    fetch,
+    '/api/email',
+    ac('DELETE', {
+      id,
+    })
+  );
+
+  if (deleteEmailResponse.status !== 200) {
+    yield put(actions.deleteEmailFailed());
+  } else {
+    yield put(actions.deleteEmailSuccess());
+    yield put({ type: types.GET_EMAILS });
+  }
+}
+
+// watchers
+export function* watchGet() {
   yield takeEvery(types.GET_EMAILS, getEmails);
 }
 
-function* sendEmail(to, body) {
-  const response = yield call(fetch, '/api/email', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      to,
-      body,
-    }),
-  });
-
-  if (response.status === 200) {
-    yield put(actions.ses());
-  } else yield put(actions.sef());
+export function* watchSend() {
+  yield takeLeading(types.SEND_EMAIL, sendEmail);
 }
 
-export function* watchSend() {
-  while (true) {
-    const { to, body } = yield take(types.SEND_EMAIL);
-    yield call(sendEmail, to, body);
-  }
+export function* watchDelete() {
+  yield takeLeading(types.DELETE_EMAIL, deleteEmail);
 }

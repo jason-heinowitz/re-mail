@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 mongoose.connect(
   'mongodb+srv://admin:hnpI4fWVhSsTsUGU@cluster0-8pown.mongodb.net/test?retryWrites=true&w=majority',
   {
@@ -7,7 +8,7 @@ mongoose.connect(
   }
 );
 
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 const emailSchema = new Schema({
   to: {

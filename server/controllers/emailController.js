@@ -7,11 +7,11 @@ const SECRET_KEY =
 
 const emailController = {};
 
-emailController.getUser = (req, res, next) => {
+// Get username from JWT
+emailController.getUsername = (req, res, next) => {
   const { token } = req.cookies;
   jwt.verify(token, SECRET_KEY, (err, payload) => {
     if (err) {
-      console.log(err);
       return next({
         code: 403,
         message: 'Could not get user at this time.',
@@ -22,9 +22,11 @@ emailController.getUser = (req, res, next) => {
     res.locals.username = payload.username;
     return next();
   });
+  // WARNING: outside jwt verification
 };
 
-emailController.createEmail = (req, res, next) => {
+// Create email
+emailController.sendEmail = (req, res, next) => {
   const { username } = res.locals;
   const { to, body } = req.body;
 
@@ -35,7 +37,7 @@ emailController.createEmail = (req, res, next) => {
       body,
       date: moment().format('MMMM Do YYYY, h:mm:ss a'),
     },
-    (err, response) => {
+    (err) => {
       if (err) {
         return next({
           code: 500,
@@ -49,9 +51,9 @@ emailController.createEmail = (req, res, next) => {
   );
 };
 
+// Get emails from username
 emailController.getEmails = (req, res, next) => {
   const { username } = res.locals;
-
   Email.find({ to: `${username}@codesmith.io` }, (err, docs) => {
     if (err) {
       return next({
@@ -63,6 +65,24 @@ emailController.getEmails = (req, res, next) => {
     }
 
     return res.status(200).json(docs);
+  });
+};
+
+// Delete email
+emailController.deleteEmail = (req, res, next) => {
+  const { username } = res.locals;
+  const { id } = req.body;
+
+  Email.findByIdAndDelete(id, (err) => {
+    if (err) {
+      return next({
+        code: 403,
+        message: 'Unable to delete email at this time.',
+        log: 'emailController.deleteEmail: DB errored when deleting user email',
+      });
+    }
+
+    return res.status(200).json('Deleted email successfully');
   });
 };
 

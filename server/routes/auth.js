@@ -1,26 +1,39 @@
 const router = require('express').Router();
-const loginController = require('../controllers/loginController');
+const authController = require('../controllers/authController');
 
 // Login
 router.post(
   '/login',
-  loginController.verifyUser,
-  loginController.createSession
+  authController.isUsernameValid,
+  authController.checkUsernamePassword,
+  authController.createSession
 );
-
-// Logout
-// POSTing logout better practice than GETing logout
-router.post('/logout', loginController.invalidateSession);
 
 // Register
 router.post(
   '/register',
-  loginController.existance,
-  loginController.createUser,
-  loginController.createSession
+  authController.isUsernameValid,
+  authController.createUser,
+  authController.createSession
 );
 
-// Validate cookies
-router.get('/check', loginController.verifyJWT);
+// Logout
+router.post('/logout', authController.logout);
+
+// Validate JWT
+router.get('/validate', authController.validateJWT);
+
+// Get users
+router.get('/users');
+
+// Get own username
+router.get('/self', authController.getUsername);
+
+// Change password
+router.post(
+  '/newPassword',
+  authController.checkUsernamePassword,
+  authController.updatePassword
+);
 
 module.exports = router;

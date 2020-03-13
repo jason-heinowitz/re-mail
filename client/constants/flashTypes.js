@@ -1,0 +1,3 @@
+export const FLASH_SUCCESS = 'FLASH_SUCCESS';
+export const FLASH_REMOVE = 'FLASH_REMOVE';
+export const FLASH_REMOVE_ALL = 'FLASH_REMOVE_ALL';
